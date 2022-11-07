@@ -1,0 +1,65 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+generator client {
+  provider = "prisma-client-js"
+  // previewFeatures = ["referentialIntegrity"]
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+  // referentialIntegrity = "prisma"
+}
+
+model RecordsTable {
+  id Int @id @default(autoincrement())
+  title String
+  NodeTable NodeTable[]
+}
+
+model NodeTable {
+
+  id Int @id @default(autoincrement())
+  processID Int
+  title String
+  description String?
+  prevNodeID Int?
+  nextNodeIDTable nextNodeIDTable[]
+  // CONSTRAINTS
+  RecordsTable RecordsTable? @relation(fields: [processID], references: [id])
+} 
+
+model nextNodeIDTable {
+  id Int @id @default(autoincrement())
+  nextNodeID Int
+  NodeTable NodeTable? @relation(fields: [nextNodeID], references: [id])
+}
+
+// CREATE
+// const user = await prisma.user.create({
+//   data: {
+//     email: 'elsa@prisma.io',
+//     name: 'Elsa Prisma',
+//   },
+// })
+
+
+// READ
+
+// // By unique identifier
+// const user = await prisma.user.findUnique({
+//   where: {
+//     email: 'elsa@prisma.io',
+//   },
+// })
+
+// // By ID
+// const user = await prisma.user.findUnique({
+//   where: {
+//     id: 99,
+//   },
+// })
+
+
+// GET ALL 
+// const users = await prisma.user.findMany()
