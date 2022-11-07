@@ -24,6 +24,22 @@ export const processRouter = router({
     getAll: publicProcedure.query(({ ctx }) => {
       return ctx.prisma.recordsTable.findMany();
     }),
+    // get a process by id
+    getProcessById: publicProcedure
+        .input(z.object({
+            id: z.number()
+        }))
+        .query(async ({input}) => {
+            const {id} = input
+            const pf = await prisma.recordsTable.findUnique({
+                where:{
+                    id:id,
+                }
+            });
+            return pf;
+        }),
+        
+    // delete a process by id
     deleteProcess: publicProcedure
     .input(z.object({id:z.number()}))
     .mutation(async({input})=>{
@@ -33,5 +49,6 @@ export const processRouter = router({
                 id:id,
             }
         })
+        return del;
     })
   });

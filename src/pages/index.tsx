@@ -10,7 +10,9 @@ const Home: NextPage = () => {
   // STATE
   const [name, setName] = useState("")
   const [processList, setProcessList] = useState<RecordsTable[]>([])
-
+  // const handleUrl = (id:number)=>{
+  //   return `/processInfo/${id}`
+  // }
   // Create
   const {mutate: addProcess} = trpc.processf.addProcess.useMutation(
   {
@@ -40,8 +42,11 @@ const Home: NextPage = () => {
     {
       onSuccess:(p:any)=>
       {
+        const {id} = p;
         console.log("DELETED: ", p)
-        setProcessList((prev)=>prev.filter((item)=>item.id!==p.id))
+        const newList = processList.filter((item)=>item.id !== id)
+        console.log("NEW LIST: ", newList, "OLD LIST: ", processList)
+        setProcessList([...newList])
       }
     }
   )
@@ -79,7 +84,7 @@ const Home: NextPage = () => {
               {processList.map((item:any)=>{
                 const {id,title} = item
                 return <li className={"p-4 my-2 justify-around"} key={id}>
-                  {title}
+                  <a href={`/processInfo/${id}`} target={"_blank"}> {title}</a>
                   <button className={"ml-4 border-black border-2 bg-red-400 text-white px-2"} key={id} onClick={()=>{deleteProcess({id})}}>Delete</button>
                 </li>
               })}
